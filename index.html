@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BetMaster Pro - Calculateur Intelligent</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #8b5cf6;
+            --secondary: #94a3b8;
+            --success: #10b981;
+            --success-dark: #059669;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --glass: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            padding: 20px 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--card-border);
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .logo-text h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--dark), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .logo-text .subtitle {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (min-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 420px 1fr;
+            }
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .card-content {
+            flex: 1;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+            font-weight: 500;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(255, 255, 255, 0.8));
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin: 24px 0;
+            border: 1px solid var(--card-border);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table td {
+            padding: 18px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+            background: rgba(99, 102, 241, 0.05);
+            font-weight: 700;
+        }
+
+        .table tr:hover {
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 18px;
+            border-radius: 12px;
+            margin: 18px 0;
+            border-left: 4px solid;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+        }
+
+        .alert-warning {
+            border-color: var(--warning);
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        }
+
+        .alert-danger {
+            border-color: var(--danger);
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+        }
+
+        /* Toggle */
+        .toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 18px;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 12px;
+            margin-bottom: 18px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .toggle:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .toggle-content {
+            display: none;
+            background: rgba(99, 102, 241, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        /* Profit Section */
+        .profit-section {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-top: 24px;
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profit-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .profit-value {
+            font-size: 2.75rem;
+            font-weight: 800;
+            margin: 12px 0;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Analysis Cards */
+        .analysis-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .analysis-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(255, 255, 255, 0.9));
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analysis-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .analysis-value {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .analysis-label {
+            font-size: 14px;
+            color: var(--secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Utility */
+        .text-center { text-align: center; }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-warning { color: var(--warning); }
+        .mb-4 { margin-bottom: 24px; }
+        .mt-4 { margin-top: 24px; }
+        .mt-auto { margin-top: auto; }
+        .hidden { display: none; }
+
+        /* Password Section */
+        .password-section {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .lock-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 8px 16px rgba(99, 102, 241, 0.3));
+        }
+
+        /* Blocked Section */
+        .blocked-section {
+            text-align: center;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .countdown {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--danger);
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            text-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Floating Elements */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header floating">
+            <div class="logo">
+                <div class="logo-icon">🎯</div>
+                <div class="logo-text">
+                    <h1>BetMaster Pro</h1>
+                    <div class="subtitle">Calculateur Intelligent de Paris Sportifs</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Password Section -->
+        <section class="glass-card password-section" id="passwordSection">
+            <div class="card-content">
+                <div class="text-center">
+                    <div class="lock-icon">🔒</div>
+                    <h2 class="card-title">Accès Sécurisé</h2>
+                    <p class="subtitle mb-4">Authentification requise</p>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mot de passe</label>
+                    <input type="password" class="form-input" id="passwordInput" placeholder="Votre mot de passe">
+                </div>
+
+                <div class="alert alert-warning hidden" id="attemptsWarning">
+                    Tentatives restantes: <span id="attemptsCount">3</span>
+                </div>
+
+                <button class="btn btn-primary mt-auto" id="accessBtn">
+                    🔐 Accéder à BetMaster Pro
+                </button>
+
+                <div class="alert alert-warning mt-4">
+                    <strong>Plateforme Premium:</strong> Outil réservé aux analystes professionnels.
+                </div>
+            </div>
+        </section>
+
+        <!-- Blocked Section -->
+        <section class="glass-card blocked-section hidden" id="blockedSection">
+            <div class="card-content">
+                <div class="text-center">
+                    <div class="lock-icon">🚫</div>
+                    <h2 class="card-title">Accès Temporairement Bloqué</h2>
+                    <p class="subtitle mb-4">Sécurité renforcée activée</p>
+                    
+                    <div class="countdown" id="countdown">30:00</div>
+                    
+                    <div class="alert alert-danger">
+                        <strong>Protection activée:</strong> Réessayez dans 30 minutes.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Calculator -->
+        <section class="hidden" id="calculatorSection">
+            <div class="main-grid">
+                <!-- Configuration Card -->
+                <div class="glass-card">
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="card-icon">⚙️</div>
+                            <h2 class="card-title">Configuration</h2>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Côtes du Match</label>
+                            <div class="input-group">
+                                <div>
+                                    <label class="form-label">Victoire 1</label>
+                                    <input type="number" class="form-input" id="cote1" value="1.85" step="0.01" min="1.01">
+                                </div>
+                                <div>
+                                    <label class="form-label">Match Nul</label>
+                                    <input type="number" class="form-input" id="coteNul" value="3.40" step="0.01" min="1.01">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Victoire 2</label>
+                                <input type="number" class="form-input" id="cote2" value="4.20" step="0.01" min="1.01">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Stratégie</label>
+                            <select class="form-select" id="strategie">
+                                <option value="1">Favori & Outsider</option>
+                                <option value="2">Favori & Nul</option>
+                                <option value="3">Favori+ & Nul-</option>
+                                <option value="4">Tout ou Rembourse</option>
+                            </select>
+                        </div>
+
+                        <div class="toggle" onclick="toggleConfig()">
+                            <span>🔧 Paramètres Avancés</span>
+                            <span>⬇️</span>
+                        </div>
+
+                        <div class="toggle-content" id="advancedConfig">
+                            <div class="form-group">
+                                <label class="form-label">Bénéfice Min (FCFA)</label>
+                                <input type="number" class="form-input" id="beneficeMin" value="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bénéfice Max (FCFA)</label>
+                                <input type="number" class="form-input" id="beneficeMax" value="150">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Variation Furtive</label>
+                                <select class="form-select" id="variationFurtive">
+                                    <option value="true">Activée (±5%)</option>
+                                    <option value="false">Désactivée</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Précision</label>
+                                <select class="form-select" id="arrondi">
+                                    <option value="0">Entiers</option>
+                                    <option value="1" selected>1 décimale</option>
+                                    <option value="2">2 décimales</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success mt-auto" id="calculateBtn">
+                            🎯 Calculer les Mises Optimales
+                        </button>
+
+                        <div class="alert alert-warning mt-4">
+                            <strong>Analyse Technique:</strong> Pour l'étude des stratégies de paris.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Card -->
+                <div class="glass-card hidden" id="resultsSection">
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <h2 class="card-title">Analyse Détaillée</h2>
+                        </div>
+
+                        <!-- Analysis Overview -->
+                        <div class="mb-4">
+                            <h3 class="form-label">Côtes du Match</h3>
+                            <div class="analysis-cards" id="analysisContent">
+                                <!-- Dynamically filled -->
+                            </div>
+                        </div>
+
+                        <!-- Statistics -->
+                        <div class="mb-4">
+                            <h3 class="form-label">Performance</h3>
+                            <div class="results-grid" id="statsGrid">
+                                <!-- Dynamically filled -->
+                            </div>
+                        </div>
+
+                        <!-- Detailed Table -->
+                        <div class="mb-4">
+                            <h3 class="form-label">Répartition des Mises</h3>
+                            <div class="table-container">
+                                <table class="table" id="miseTable">
+                                    <!-- Dynamically filled -->
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Profit Summary -->
+                        <div class="profit-section">
+                            <h3>Bénéfice Net Garanti</h3>
+                            <div class="profit-value" id="profitValue">0 FCFA</div>
+                            <p>Stratégie optimisée - Résultat garanti</p>
+                        </div>
+
+                        <button class="btn btn-primary mt-4" onclick="resetCalculator()">
+                            🔄 Nouvelle Analyse
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Configuration
+        const PASSWORD = "azerty@.";
+        const MAX_ATTEMPTS = 3;
+        const BLOCK_TIME = 30 * 60 * 1000;
+
+        // State
+        let attempts = MAX_ATTEMPTS;
+        let blockedUntil = null;
+        let countdownInterval = null;
+
+        // DOM Elements
+        const elements = {
+            passwordSection: document.getElementById('passwordSection'),
+            blockedSection: document.getElementById('blockedSection'),
+            calculatorSection: document.getElementById('calculatorSection'),
+            resultsSection: document.getElementById('resultsSection'),
+            passwordInput: document.getElementById('passwordInput'),
+            accessBtn: document.getElementById('accessBtn'),
+            calculateBtn: document.getElementById('calculateBtn'),
+            attemptsWarning: document.getElementById('attemptsWarning'),
+            attemptsCount: document.getElementById('attemptsCount'),
+            countdown: document.getElementById('countdown'),
+            analysisContent: document.getElementById('analysisContent'),
+            statsGrid: document.getElementById('statsGrid'),
+            miseTable: document.getElementById('miseTable'),
+            profitValue: document.getElementById('profitValue')
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', checkBlockStatus);
+
+        // Event Listeners
+        elements.accessBtn.addEventListener('click', checkPassword);
+        elements.passwordInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') checkPassword();
+        });
+        elements.calculateBtn.addEventListener('click', calculateMises);
+
+        // Security Functions
+        function checkBlockStatus() {
+            const blockData = localStorage.getItem('blockedUntil');
+            if (blockData) {
+                blockedUntil = parseInt(blockData);
+                if (Date.now() < blockedUntil) {
+                    showBlockedSection();
+                    startCountdown(blockedUntil - Date.now());
+                } else {
+                    resetSecurity();
+                }
+            } else {
+                const savedAttempts = localStorage.getItem('attempts');
+                if (savedAttempts) {
+                    attempts = parseInt(savedAttempts);
+                    updateAttemptsDisplay();
+                }
+            }
+        }
+
+        function showBlockedSection() {
+            elements.passwordSection.classList.add('hidden');
+            elements.blockedSection.classList.remove('hidden');
+        }
+
+        function startCountdown(timeRemaining) {
+            countdownInterval = setInterval(() => {
+                const remaining = Math.max(0, timeRemaining - (Date.now() - (blockedUntil - timeRemaining)));
+                
+                if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                    resetSecurity();
+                    return;
+                }
+
+                const minutes = Math.floor(remaining / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                elements.countdown.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function resetSecurity() {
+            localStorage.removeItem('blockedUntil');
+            localStorage.removeItem('attempts');
+            attempts = MAX_ATTEMPTS;
+            elements.blockedSection.classList.add('hidden');
+            elements.passwordSection.classList.remove('hidden');
+            elements.attemptsWarning.classList.add('hidden');
+        }
+
+        function checkPassword() {
+            if (elements.passwordInput.value === PASSWORD) {
+                elements.passwordSection.classList.add('hidden');
+                elements.calculatorSection.classList.remove('hidden');
+                resetSecurity();
+            } else {
+                attempts--;
+                updateAttemptsDisplay();
+                
+                if (attempts <= 0) {
+                    blockAccess();
+                } else {
+                    alert(`Mot de passe incorrect. ${attempts} tentative(s) restante(s).`);
+                    elements.passwordInput.value = '';
+                    elements.passwordInput.focus();
+                }
+            }
+        }
+
+        function updateAttemptsDisplay() {
+            elements.attemptsCount.textContent = attempts;
+            elements.attemptsWarning.classList.remove('hidden');
+            localStorage.setItem('attempts', attempts.toString());
+        }
+
+        function blockAccess() {
+            blockedUntil = Date.now() + BLOCK_TIME;
+            localStorage.setItem('blockedUntil', blockedUntil.toString());
+            showBlockedSection();
+            startCountdown(BLOCK_TIME);
+        }
+
+        // UI Functions
+        function toggleConfig() {
+            const config = document.getElementById('advancedConfig');
+            config.style.display = config.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Calculation Functions
+        function calculateMises() {
+            const cote1 = parseFloat(document.getElementById('cote1').value);
+            const coteNul = parseFloat(document.getElementById('coteNul').value);
+            const cote2 = parseFloat(document.getElementById('cote2').value);
+            const strategie = parseInt(document.getElementById('strategie').value);
+            const beneficeMin = parseFloat(document.getElementById('beneficeMin').value);
+            const beneficeMax = parseFloat(document.getElementById('beneficeMax').value);
+            const variationFurtive = document.getElementById('variationFurtive').value === 'true';
+            const arrondi = parseInt(document.getElementById('arrondi').value);
+
+            if (!validateInputs(cote1, coteNul, cote2)) return;
+
+            const analyse = analyserCotes(cote1, cote2, coteNul);
+            const resultats = calculMisesFurtives(strategie, analyse.coteFav, analyse.coteOut, coteNul, beneficeMin, beneficeMax, variationFurtive, arrondi);
+
+            if (resultats) {
+                displayResults(analyse, resultats, arrondi);
+                elements.resultsSection.classList.remove('hidden');
+            }
+        }
+
+        function validateInputs(cote1, coteNul, cote2) {
+            if (!cote1 || !coteNul || !cote2 || cote1 < 1.01 || coteNul < 1.01 || cote2 < 1.01) {
+                alert('Veuillez entrer des cotes valides (supérieures à 1.01)');
+                return false;
+            }
+            return true;
+        }
+
+        function analyserCotes(cote1, cote2, coteNul) {
+            const favorite = cote1 < cote2 ? "Victoire Équipe 1" : "Victoire Équipe 2";
+            const outsider = cote1 < cote2 ? "Victoire Équipe 2" : "Victoire Équipe 1";
+            const coteFav = Math.min(cote1, cote2);
+            const coteOut = Math.max(cote1, cote2);
+            const arbitrage = (1/cote1 + 1/coteNul + 1/cote2);
+            const margeBookmaker = (arbitrage - 1) * 100;
+
+            return { favorite, outsider, coteFav, coteOut, coteNul, cote1, cote2, arbitrage, margeBookmaker };
+        }
+
+        function calculMisesFurtives(option, coteFav, coteOut, coteNul, beneficeMin, beneficeMax, variationFurtive, arrondi) {
+            const beneficeNet = beneficeMin + Math.random() * (beneficeMax - beneficeMin);
+            
+            const variationPct = () => variationFurtive ? -0.05 + Math.random() * 0.1 : 0;
+
+            let mise1, mise2, c1, c2, issues;
+
+            switch(option) {
+                case 1:
+                    c1 = coteFav; c2 = coteOut;
+                    mise1 = (beneficeNet * c2) / (c1 + c2);
+                    mise2 = (beneficeNet * c1) / (c1 + c2);
+                    issues = ["Victoire Favori", "Victoire Outsider"];
+                    break;
+                case 2:
+                    c1 = coteFav; c2 = coteNul;
+                    mise1 = (beneficeNet * c2) / (c1 + c2);
+                    mise2 = (beneficeNet * c1) / (c1 + c2);
+                    issues = ["Victoire Favori", "Match Nul"];
+                    break;
+                case 3:
+                    c1 = coteFav; c2 = coteNul;
+                    mise1 = (beneficeNet * 1.1 * c2) / (c1 + c2);
+                    mise2 = (beneficeNet * 0.9 * c1) / (c1 + c2);
+                    issues = ["Victoire Favori (+10%)", "Match Nul (-10%)"];
+                    break;
+                case 4:
+                    mise1 = beneficeNet; mise2 = 0;
+                    c1 = coteFav; c2 = coteNul;
+                    issues = ["Victoire Favori", "Match Nul (Remb.)"];
+                    break;
+                default: return null;
+            }
+
+            const mises = [
+                Math.max(0, arrondir(mise1 * (1 + variationPct()), arrondi)),
+                Math.max(0, arrondir(mise2 * (1 + variationPct()), arrondi))
+            ];
+
+            const gains = [arrondir(mises[0] * c1, arrondi), arrondir(mises[1] * c2, arrondi)];
+            const gainMin = Math.min(...gains.filter(g => g > 0));
+            const benefice = gainMin - (mises[0] + mises[1]);
+            const totalMise = mises[0] + mises[1];
+            const roi = (benefice / totalMise) * 100;
+
+            return { mises, gains, gainMin, benefice, issues, totalMise, roi, cotesUtilisees: [c1, c2] };
+        }
+
+        function arrondir(valeur, decimales) {
+            const facteur = Math.pow(10, decimales);
+            return Math.round(valeur * facteur) / facteur;
+        }
+
+        function displayResults(analyse, resultats, arrondi) {
+            displayAnalysis(analyse);
+            displayStats(analyse, resultats, arrondi);
+            displayMises(resultats, arrondi);
+            elements.profitValue.textContent = `${resultats.benefice.toFixed(arrondi)} FCFA`;
+        }
+
+        function displayAnalysis(analyse) {
+            elements.analysisContent.innerHTML = `
+                <div class="analysis-card">
+                    <div class="analysis-value">${analyse.cote1}</div>
+                    <div class="analysis-label">Victoire 1</div>
+                </div>
+                <div class="analysis-card">
+                    <div class="analysis-value">${analyse.coteNul}</div>
+                    <div class="analysis-label">Match Nul</div>
+                </div>
+                <div class="analysis-card">
+                    <div class="analysis-value">${analyse.cote2}</div>
+                    <div class="analysis-label">Victoire 2</div>
+                </div>
+                <div class="analysis-card">
+                    <div class="analysis-value ${analyse.margeBookmaker > 10 ? 'text-danger' : 'text-success'}">${analyse.margeBookmaker.toFixed(1)}%</div>
+                    <div class="analysis-label">Marge Bookmaker</div>
+                </div>
+            `;
+        }
+
+        function displayStats(analyse, resultats, arrondi) {
+            elements.statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${resultats.totalMise.toFixed(arrondi)}</div>
+                    <div class="stat-label">Total Misé (FCFA)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value text-success">${resultats.roi.toFixed(1)}%</div>
+                    <div class="stat-label">ROI Garanti</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${resultats.gainMin.toFixed(arrondi)}</div>
+                    <div class="stat-label">Gain Minimal (FCFA)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value ${analyse.margeBookmaker > 10 ? 'text-danger' : 'text-success'}">
+                        ${analyse.margeBookmaker > 10 ? 'Élevé' : 'Faible'}
+                    </div>
+                    <div class="stat-label">Niveau de Risque</div>
+                </div>
+            `;
+        }
+
+        function displayMises(resultats, arrondi) {
+            let tableHTML = `
+                <thead>
+                    <tr>
+                        <th>Résultat</th>
+                        <th>Mise (FCFA)</th>
+                        <th>Côte</th>
+                        <th>Gain (FCFA)</th>
+                        <th>Bénéfice</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            for (let i = 0; i < resultats.issues.length; i++) {
+                const benefice = resultats.gains[i] - resultats.totalMise;
+                tableHTML += `
+                    <tr>
+                        <td><strong>${resultats.issues[i]}</strong></td>
+                        <td>${resultats.mises[i].toFixed(arrondi)}</td>
+                        <td>${resultats.cotesUtilisees[i].toFixed(2)}</td>
+                        <td class="text-success">${resultats.gains[i].toFixed(arrondi)}</td>
+                        <td class="${benefice >= 0 ? 'text-success' : 'text-danger'}">${benefice >= 0 ? '+' : ''}${benefice.toFixed(arrondi)}</td>
+                    </tr>
+                `;
+            }
+
+            tableHTML += `
+                <tr style="background: rgba(99, 102, 241, 0.05);">
+                    <td><strong>TOTAL</strong></td>
+                    <td><strong>${resultats.totalMise.toFixed(arrondi)}</strong></td>
+                    <td></td>
+                    <td><strong>${resultats.gainMin.toFixed(arrondi)}</strong></td>
+                    <td class="text-success"><strong>+${resultats.benefice.toFixed(arrondi)}</strong></td>
+                </tr>
+            </tbody>`;
+
+            elements.miseTable.innerHTML = tableHTML;
+        }
+
+        function resetCalculator() {
+            elements.resultsSection.classList.add('hidden');
+        }
+
+        // Cleanup
+        window.addEventListener('beforeunload', () => {
+            if (countdownInterval) clearInterval(countdownInterval);
+        });
+    </script>
+</body>
+</html>
